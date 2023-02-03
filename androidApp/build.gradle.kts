@@ -41,4 +41,8 @@ dependencies {
     implementation("androidx.activity:activity-compose:1.5.1")
     val nav_version = "2.5.3"
     implementation("androidx.navigation:navigation-compose:$nav_version")
+    implementation(Dependencies.Koin.core)
+    implementation(Dependencies.Koin.android)
+    implementation(Dependencies.Koin.android_compose)
+    implementation(Dependencies.Koin.test)
 }

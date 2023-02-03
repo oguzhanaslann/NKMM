@@ -17,14 +17,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.ViewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.nkmm.NoteViewModel
 import com.example.nkmm.note.NoteOverview
-import kotlinx.coroutines.flow.MutableStateFlow
+import org.koin.androidx.compose.koinViewModel
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,31 +37,21 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-class NoteViewModel() : ViewModel() {
-    val notes = MutableStateFlow<List<NoteOverview>>(emptyList())
-
-    init {
-        notes.value = listOf(
-            NoteOverview("1", "Title 1", "Content 1"),
-            NoteOverview("2", "Title 2", "Content 2")
-        )
-    }
-}
-
 const val CREATE_NOTE_ROUTE = "AddNote"
 const val NOTES_ROUTE = "Notes"
 const val NOTE_ROUTE = "Note/{noteId}"
 
 @Composable
 fun MainScreen(
-    modifier: Modifier = Modifier,
-
+    modifier: Modifier = Modifier
 ) {
     val navController = rememberNavController()
-    NavHost(navController = navController , startDestination = NOTES_ROUTE ) {
+    val viewModel: NoteViewModel = koinViewModel()
+    NavHost(navController = navController, startDestination = NOTES_ROUTE) {
         composable(NOTES_ROUTE) {
-            val viewModel = NoteViewModel()
+
             val notes by viewModel.notes.collectAsState()
+
             MainScreenContent(
                 modifier = modifier,
                 notes = notes,
@@ -81,7 +71,12 @@ fun MainScreen(
         }
 
         composable(CREATE_NOTE_ROUTE) {
-            CreateNoteView()
+            CreateNoteView(
+                onNoteCreate = {
+                    navController.popBackStack()
+                    viewModel.refreshNotes()
+                }
+            )
         }
     }
 }
@@ -132,6 +127,7 @@ fun DefaultPreview() {
 @Composable
 fun NoteOverviewItem(
     modifier: Modifier = Modifier,
+    note: NoteOverview
 ) {
     Card(
         modifier = Modifier
@@ -145,11 +141,11 @@ fun NoteOverviewItem(
             modifier = Modifier.padding(16.dp)
         ) {
             Text(
-                text = "Hello World",
+                text = note.title,
                 style = MaterialTheme.typography.h6
             )
             Text(
-                text = "Hello World description",
+                text = note.content,
                 style = MaterialTheme.typography.body2,
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis
@@ -162,7 +158,9 @@ fun NoteOverviewItem(
 @Composable
 fun previewNoteOverview() {
     NKMMTheme {
-        NoteOverviewItem()
+        NoteOverviewItem(
+            note = NoteOverview("1", "Title 1", "Content 1")
+        )
     }
 }
 
@@ -180,7 +178,9 @@ fun NoteOverviewList(
             items = notes,
             key = { item -> item.id },
         ) { item ->
-            NoteOverviewItem()
+            NoteOverviewItem(
+                note = item
+            )
         }
     }
 }
