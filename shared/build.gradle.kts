@@ -2,6 +2,20 @@ plugins {
     kotlin("multiplatform")
     kotlin("native.cocoapods")
     id("com.android.library")
+    id("app.cash.sqldelight") version "2.0.0-alpha05"
+}
+
+repositories {
+    google()
+    mavenCentral()
+}
+
+sqldelight {
+    databases {
+        create("nkmm_db") {
+            packageName.set("com.example.nkmm.db")
+        }
+    }
 }
 
 kotlin {
