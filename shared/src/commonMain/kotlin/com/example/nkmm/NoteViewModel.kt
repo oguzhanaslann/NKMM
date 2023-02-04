@@ -2,6 +2,7 @@ package com.example.nkmm
 
 import com.example.nkmm.base.ViewModel
 import com.example.nkmm.note.NoteOverview
+import com.example.nkmm.util.randomUUID
 import kotlinx.coroutines.flow.MutableStateFlow
 
 class NoteViewModel(
@@ -13,18 +14,18 @@ class NoteViewModel(
         notes.value = list.getNoteList()
     }
 
-    fun refreshNotes() {
-        notes.value = list.getNoteList()
-    }
-
     fun addNote(title: String, content: String) {
         list.addNote(
             NoteOverview(
-                id = "3",
+                id = randomUUID(),
                 title = title,
                 content = content
             )
         )
         refreshNotes()
+    }
+
+    private fun refreshNotes() {
+        notes.value = list.getNoteList()
     }
 }
