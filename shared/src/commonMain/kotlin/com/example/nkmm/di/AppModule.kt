@@ -1,5 +1,3 @@
 package com.example.nkmm.di
 
-val appModule = listOf(
-    commonModule
-)
+val sharedDepModule = listOf(commonModule)

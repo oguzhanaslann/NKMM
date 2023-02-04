@@ -1,27 +1,31 @@
 package com.example.nkmm
 
+import com.example.nkmm.data.local.NotesLocalDataSource
 import com.example.nkmm.note.NoteOverview
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 
-class NoteListUseCase{
-    private val list = mutableListOf(
-        NoteOverview("1", "Title 1", "Content 1"),
-        NoteOverview("2", "Title 2", "Content 2")
-    )
+class NoteListUseCase(
+    private val notesLocalDataSource: NotesLocalDataSource
+) {
 
-    fun getNoteList(): List<NoteOverview> {
-        return list
+    fun getNoteList(): Flow<List<NoteOverview>> {
+        return notesLocalDataSource.getNoteList().map {
+            it.map { note ->
+                NoteOverview(
+                    id = note.id,
+                    title = note.title.orEmpty(),
+                    content = note.content.orEmpty()
+                )
+            }
+        }
     }
 
-    fun addNote(noteOverview: NoteOverview) {
-        list.add(noteOverview)
+    suspend fun addNote(noteOverview: NoteOverview) {
+        notesLocalDataSource.addNote(noteOverview)
     }
 
-    fun deleteNote(id: String) {
-        list.find { it.id == id }?.let { list.remove(it) }
+    suspend fun deleteNote(id: String) {
+        notesLocalDataSource.deleteNote(id)
     }
-
-    companion object {
-        val instance = NoteListUseCase()
-    }
-    
 }

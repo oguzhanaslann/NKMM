@@ -12,7 +12,7 @@ repositories {
 
 sqldelight {
     databases {
-        create("nkmm_db") {
+        create("NkmmDb") {
             packageName.set("com.example.nkmm.db")
         }
     }
@@ -38,9 +38,10 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
+                implementation(Dependencies.coroutines_core)
                 implementation(Dependencies.Koin.core)
                 implementation(Dependencies.Koin.test)
+                implementation(Dependencies.SqlDelight.coroutines_extension)
             }
         }
         val commonTest by getting {
@@ -50,7 +51,8 @@ kotlin {
         }
         val androidMain by getting {
             dependencies {
-                implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.0-alpha04")
+                implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.0-alpha05")
+                implementation(Dependencies.SqlDelight.android_driver)
             }
         }
         val androidTest by getting
@@ -62,6 +64,11 @@ kotlin {
             iosX64Main.dependsOn(this)
             iosArm64Main.dependsOn(this)
             iosSimulatorArm64Main.dependsOn(this)
+            dependencies {
+                implementation(
+                    Dependencies.SqlDelight.native_driver
+                )
+            }
         }
         val iosX64Test by getting
         val iosArm64Test by getting
