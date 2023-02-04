@@ -14,7 +14,7 @@ class NoteViewModel(
 
     init {
         viewModelScope.launch {
-            notes.emitAll(list.getNoteList())
+            notes.emitAll(list.getNoteList(viewModelScope.coroutineContext))
         }
     }
 

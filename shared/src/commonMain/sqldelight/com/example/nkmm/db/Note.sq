@@ -6,10 +6,17 @@ CREATE TABLE IF NOT EXISTS NOTE (
 
 
 -- Insert a new note
+addNote:
 INSERT INTO NOTE (id, title, content) VALUES (?, ?, ?);
 
 -- Update a note
+updateNote:
 UPDATE NOTE SET title = ?, content = ? WHERE id = ?;
 
 -- Delete a note
+deleteNote:
 DELETE FROM NOTE WHERE id = ?;
+
+-- Get a all notes
+getNote:
+SELECT * FROM NOTE;
