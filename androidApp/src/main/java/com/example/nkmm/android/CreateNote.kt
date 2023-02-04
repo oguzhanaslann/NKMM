@@ -11,10 +11,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.nkmm.NoteListUseCase
+import com.example.nkmm.NoteViewModel
 import com.example.nkmm.note.NoteOverview
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun CreateNoteView(
+    noteViewModel: NoteViewModel = koinViewModel(),
     onNoteCreate: () -> Unit
 ) {
     Surface(
@@ -50,13 +53,10 @@ fun CreateNoteView(
             )
 
             Button(onClick = {
-                NoteListUseCase.instance
+                noteViewModel
                     .addNote(
-                        NoteOverview(
-                            id = "3",
-                            title = title.value,
-                            content = content.value
-                        )
+                        title = title.value,
+                        content = content.value
                     )
                 onNoteCreate()
             }) {
@@ -72,8 +72,6 @@ fun CreateNoteView(
 @Composable
 fun previewCreateNoteView() {
     NKMMTheme {
-        CreateNoteView(
-            onNoteCreate = { }
-        )
+        CreateNoteView { }
     }
 }

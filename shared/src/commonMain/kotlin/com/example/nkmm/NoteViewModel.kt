@@ -5,7 +5,7 @@ import com.example.nkmm.note.NoteOverview
 import kotlinx.coroutines.flow.MutableStateFlow
 
 class NoteViewModel(
-    private val list: NoteListUseCase = NoteListUseCase.instance
+    private val list: NoteListUseCase
 ) : ViewModel() {
     val notes = MutableStateFlow<List<NoteOverview>>(emptyList())
 
@@ -15,5 +15,16 @@ class NoteViewModel(
 
     fun refreshNotes() {
         notes.value = list.getNoteList()
+    }
+
+    fun addNote(title: String, content: String) {
+        list.addNote(
+            NoteOverview(
+                id = "3",
+                title = title,
+                content = content
+            )
+        )
+        refreshNotes()
     }
 }

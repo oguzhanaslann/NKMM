@@ -43,13 +43,12 @@ const val NOTE_ROUTE = "Note/{noteId}"
 
 @Composable
 fun MainScreen(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    viewModel: NoteViewModel = koinViewModel()
 ) {
     val navController = rememberNavController()
-    val viewModel: NoteViewModel = koinViewModel()
     NavHost(navController = navController, startDestination = NOTES_ROUTE) {
         composable(NOTES_ROUTE) {
-
             val notes by viewModel.notes.collectAsState()
 
             MainScreenContent(
@@ -61,6 +60,14 @@ fun MainScreen(
             )
         }
 
+        composable(CREATE_NOTE_ROUTE) {
+            CreateNoteView(
+                noteViewModel = viewModel,
+            ) {
+                navController.popBackStack()
+            }
+        }
+
         composable(
             NOTE_ROUTE,
             arguments = listOf(navArgument("noteId") { type = NavType.StringType })
@@ -68,15 +75,6 @@ fun MainScreen(
             require(backStackEntry.arguments != null)
             val noteId = backStackEntry.arguments!!.getString("noteId")
             require(noteId != null)
-        }
-
-        composable(CREATE_NOTE_ROUTE) {
-            CreateNoteView(
-                onNoteCreate = {
-                    navController.popBackStack()
-                    viewModel.refreshNotes()
-                }
-            )
         }
     }
 }
