@@ -7,26 +7,26 @@ import com.example.nkmm.db.NkmmDb
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
-const val NkmmDbDiName = "NkmmDb"
-private const val NoteQueriesDiName = "NoteQueries"
-private const val NotesLocalDataSourceDiName = "NotesLocalDataSource"
+const val NKMM_DB_DI_NAME = "NkmmDb"
+private const val NOTE_QUERIES_DI_NAME = "NoteQueries"
+private const val NOTES_LOCAL_DATA_SOURCE_DI_NAME = "NotesLocalDataSource"
 
 val commonModule = module {
 
-    factory(named(NoteQueriesDiName)) {
-        get<NkmmDb>(named(NkmmDbDiName)).noteQueries
+    factory(named(NOTE_QUERIES_DI_NAME)) {
+        get<NkmmDb>(named(NKMM_DB_DI_NAME)).noteQueries
     }
 
-    factory<NotesLocalDataSource>(named(NotesLocalDataSourceDiName)) {
+    factory<NotesLocalDataSource>(named(NOTES_LOCAL_DATA_SOURCE_DI_NAME)) {
         NotesLocalDataSourceImpl(
-            noteQueries = get(named(NoteQueriesDiName))
+            noteQueries = get(named(NOTE_QUERIES_DI_NAME))
         )
     }
 
 
     factory {
         NoteListUseCase(
-            notesLocalDataSource = get(named(NotesLocalDataSourceDiName))
+            notesLocalDataSource = get(named(NOTES_LOCAL_DATA_SOURCE_DI_NAME))
         )
     }
 }

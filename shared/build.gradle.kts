@@ -64,12 +64,12 @@ kotlin {
             iosX64Main.dependsOn(this)
             iosArm64Main.dependsOn(this)
             iosSimulatorArm64Main.dependsOn(this)
-            dependencies {
-                implementation(
-                    Dependencies.SqlDelight.native_driver
-                )
-            }
         }
+
+        iosMain.dependencies {
+            implementation("app.cash.sqldelight:native-driver:2.0.0-alpha05")
+        }
+
         val iosX64Test by getting
         val iosArm64Test by getting
         val iosSimulatorArm64Test by getting
